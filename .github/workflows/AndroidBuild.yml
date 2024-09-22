@@ -1,0 +1,108 @@
+name: Android CI
+env:
+  # The name of the main module repository
+  main_project_module: app
+
+on:
+  pull_request:
+    branches:
+      - developer
+      - main
+
+  push:
+    branches:
+      - main
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  check-code-style:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: brew install ktlint
+        run: ./gradlew ktlintCheck
+
+  run-unit-tests:
+    runs-on: ubuntu-latest
+    needs: check-code-style
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Run unit tests
+        run: ./gradlew test
+
+  build-apk:
+    runs-on: ubuntu-latest
+    needs: run-unit-tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Build APKs
+        run: |
+          ./gradlew assembleRelease
+
+      - name: Rename APKs
+        run: ./gradlew renameApks
+        env:
+          GITHUB_WORKSPACE: ${{ github.workspace }}
+
+      - name: Upload APK Release - ${{ env.GITHUB_REPOSITORY_OWNER }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: APK(s) release generated
+          path: ${{ env.main_project_module }}/build/outputs/apk/release/
+
+  create-tag:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Expose app version name
+        id: get_version_name
+        run: echo "VERSION_NAME=$(./gradlew -q app:printVersionName | tr -d '\r')" >> $GITHUB_ENV
+
+      - name: Create a new tag
+        run: |
+          echo "Version Name is: $VERSION_NAME"
+          TAG_NAME="release-$(date +'%Y-%m-%d')-${VERSION_NAME}"
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+        env:
+          VERSION_NAME: ${{ env.VERSION_NAME }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
