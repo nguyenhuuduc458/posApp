@@ -1,5 +1,7 @@
+import java.io.FileInputStream
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.com.android.application)
@@ -11,7 +13,20 @@ plugins {
     alias(libs.plugins.google.service)
     alias(libs.plugins.firebase.crashlytics)
 }
+
+val keyStorePropertiesFile = rootProject.file("keystore.properties")
+val keyStoreProperty = Properties()
+keyStoreProperty.load(FileInputStream(keyStorePropertiesFile))
+
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file(keyStoreProperty["KEYSTORE_FILE"] as String)
+            storePassword = keyStoreProperty["KEYSTORE_PASSWORD"] as String
+            keyAlias = keyStoreProperty["KEY_ALIAS"] as String
+            keyPassword = keyStoreProperty["KEY_PASSWORD"] as String
+        }
+    }
     namespace = "com.example.posapplication"
     compileSdk = 34
 
@@ -37,6 +52,7 @@ android {
             )
         }
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -44,6 +60,7 @@ android {
             )
         }
     }
+
     // Always show the result of every unit test, even if it passes.
     testOptions.unitTests {
         isIncludeAndroidResources = true
