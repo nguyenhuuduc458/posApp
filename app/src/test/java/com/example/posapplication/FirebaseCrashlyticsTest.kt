@@ -7,6 +7,5 @@ class FirebaseCrashlyticsTest {
     @Test
     fun `should show message in crashlytics`() {
         Truth.assertThat(true).isTrue()
-        TODO("only for testing firebase crash")
     }
 }
