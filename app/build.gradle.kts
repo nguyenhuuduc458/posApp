@@ -210,7 +210,7 @@ ktlint {
 }
 
 // =========================GRADLE TASK======================
-tasks.register("renameApks") {
+tasks.register("renameApk") {
     val buildDirPath =
         layout.buildDirectory.asFile
             .get()
