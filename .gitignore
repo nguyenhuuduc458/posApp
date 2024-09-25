@@ -21,13 +21,15 @@ output.json
 misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
+.kotlin
 
 # Keystore files
 *.jks
 *.keystore
+keystore.properties
 
 # Google Services (e.g. APIs or Firebase)
-google-services.json
+app/google-services.json
 
 # Android Profiling
 *.hprof
