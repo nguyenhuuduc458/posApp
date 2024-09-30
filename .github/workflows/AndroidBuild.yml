@@ -125,12 +125,6 @@ jobs:
       - name: List APK files
         run: ls -R app/build/outputs/apk/release/
 
-      - name: Upload APK Release - ${{ env.GITHUB_REPOSITORY_OWNER }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: APK(s) release generated
-          path: ${{ env.main_project_module }}/build/outputs/apk/release/*.apk
-
       - name: Distribute APK to slack
         uses: adrey/slack-file-upload-action@1.0.5
         with:
@@ -138,6 +132,12 @@ jobs:
           channel: pos-application
           path: ${{ env.main_project_module }}/build/outputs/apk/release/*.apk
           initial_comment: ${{ github.event.head_commit.message }}
+
+      - name: Upload APK Release - ${{ env.GITHUB_REPOSITORY_OWNER }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: APK(s) release generated
+          path: ${{ env.main_project_module }}/build/outputs/apk/release/*.apk
 
   create-tag:
     runs-on: ubuntu-latest
