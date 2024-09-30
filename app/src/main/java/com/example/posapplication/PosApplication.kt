@@ -2,12 +2,16 @@ package com.example.posapplication
 
 import android.app.Application
 import com.example.posapplication.core.confiig.CrashlyticsTree
+import com.example.posapplication.di.appModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 import timber.log.Timber
 
 class PosApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         initTimber()
+        initKoin()
     }
 
     private fun initTimber() =
@@ -17,6 +21,11 @@ class PosApplication : Application() {
         }
 
     private fun initKoin() {
-        TODO("Not implemented yet")
+        startKoin {
+            startKoin {
+                androidContext(this@PosApplication)
+                modules(appModule)
+            }
+        }
     }
 }
