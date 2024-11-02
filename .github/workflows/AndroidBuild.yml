@@ -117,19 +117,19 @@ jobs:
           cache: 'gradle'
 
       - name: Build APKs
-        run: |
-          ./gradlew assembleRelease
+        run: ./gradlew assembleRelease --stacktrace
 
       - name: Rename APKs
-        run: ./gradlew renameApks
-        env:
-          GITHUB_WORKSPACE: ${{ github.workspace }}
+        run: ./gradlew renameApk --stacktrace
+
+      - name: List APK files
+        run: ls -R app/build/outputs/apk/release/
 
       - name: Upload APK Release - ${{ env.GITHUB_REPOSITORY_OWNER }}
         uses: actions/upload-artifact@v4
         with:
           name: APK(s) release generated
-          path: ${{ env.main_project_module }}/build/outputs/apk/release/
+          path: ${{ env.main_project_module }}/build/outputs/apk/release/*.apk
 
   create-tag:
     runs-on: ubuntu-latest
