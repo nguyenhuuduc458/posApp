@@ -22,6 +22,7 @@ timber = "5.0.1"
 google-service = "4.4.2"
 firebase-bom = "33.3.0"
 crashlytics = "3.0.2"
+hilt-android = "2.51.1"
 
 # @keep
 ksp = "2.0.20-1.0.24"
@@ -83,6 +84,9 @@ timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom"}
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx"}
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx"}
+hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android"}
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt-android" }
+hilt-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt-android" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }
@@ -94,6 +98,7 @@ ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 google-service = { id = "com.google.gms.google-services", version.ref = "google-service" }
 firebase-crashlytics = { id ="com.google.firebase.crashlytics", version.ref = "crashlytics" }
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt-android" }
 
 [bundles]
 

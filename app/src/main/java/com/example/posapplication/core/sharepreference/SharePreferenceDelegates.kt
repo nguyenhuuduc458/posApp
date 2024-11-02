@@ -1,4 +1,4 @@
-package com.example.posapplication.core.sharepreference
+package com.example.note.core.sharepreference
 
 import android.content.SharedPreferences
 import kotlin.properties.ReadWriteProperty

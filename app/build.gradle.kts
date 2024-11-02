@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.google.service)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.hilt.android)
 }
 
 val keyStorePropertiesFile = rootProject.file("keystore.properties")
@@ -174,14 +175,10 @@ dependencies {
     ksp(libs.room.complier)
     implementation(libs.room.ktx)
 
-    // koin
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.core)
-    implementation(libs.koin.android.compat)
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.androidx.navigation)
-    implementation(libs.koin.androidx.workmanager)
-    implementation(libs.koin.androidx.test)
+    // hilt
+    implementation(libs.hilt)
+    testImplementation(libs.hilt.testing)
+    ksp(libs.hilt.compiler)
 
     // retrofit
     implementation(libs.retrofit)

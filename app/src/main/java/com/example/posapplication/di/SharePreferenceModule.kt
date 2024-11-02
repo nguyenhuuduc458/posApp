@@ -1,24 +1,44 @@
-package com.example.note.di
+package com.example.posapplication.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.qualifier.named
-import org.koin.dsl.module
+import com.example.note.core.sharepreference.AuthPreferences
+import com.example.note.core.sharepreference.SharePreferenceUtil
+import com.example.note.core.sharepreference.UserSettingsPreferences
+import com.example.posapplication.core.sharepreference.SecureSharedPreferenceUtil
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-val sharedPreferences
-    get() =
-        module {
-            // this preference is used to store small data
-            single<SharedPreferences> {
-                androidContext().getSharedPreferences(
-                    "note_shared_preference",
-                    Context.MODE_PRIVATE,
-                )
-            }
+@Module
+@InstallIn(SingletonComponent::class)
+object SharePreferenceModule {
+    @Provides
+    @Singleton
+    @AuthPreferences
+    fun provideAuthPreferences(
+        @ApplicationContext context: Context,
+    ): SharedPreferences = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
 
-            // this preference is used to store secure data and small
-            single<SharedPreferences>(qualifier = named("secure_prefs")) {
-                androidContext().getSharedPreferences("secure_prefs", Context.MODE_PRIVATE)
-            }
-        }
+    @Provides
+    @Singleton
+    @UserSettingsPreferences
+    fun provideUserSettingsPreferences(
+        @ApplicationContext context: Context,
+    ): SharedPreferences = context.getSharedPreferences("userSettings", Context.MODE_PRIVATE)
+
+    @Provides
+    @Singleton
+    fun provideSharePreferenceUtil(
+        @UserSettingsPreferences sharedPreferences: SharedPreferences,
+    ): SharePreferenceUtil = SharePreferenceUtil(sharedPreferences)
+
+    @Provides
+    @Singleton
+    fun provideSecureSharePreferenceUtil(
+        @AuthPreferences secureSharePreferenceDelegates: SharedPreferences,
+    ): SecureSharedPreferenceUtil = SecureSharedPreferenceUtil(secureSharePreferenceDelegates)
+}

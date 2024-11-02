@@ -1,8 +1,8 @@
-package com.example.posapplication.core.sharepreference
+package com.example.note.core.sharepreference
 
 import android.content.SharedPreferences
-import com.example.posapplication.core.cryptographic.KeyStoreUtil.decryptData
-import com.example.posapplication.core.cryptographic.KeyStoreUtil.encryptData
+import com.example.note.core.cryptographic.KeyStoreUtil.decryptData
+import com.example.note.core.cryptographic.KeyStoreUtil.encryptData
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
